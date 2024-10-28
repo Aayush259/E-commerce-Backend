@@ -1,9 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import cloudinary from "cloudinary";
 import cors from "cors";
 import ProductRoute from "./routes/ProductRoute.js";
+import AddProductRoute from "./routes/AddProductRoute.js";
 
 dotenv.config();
 
@@ -34,6 +34,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/products", ProductRoute);
+app.use("/addProduct", AddProductRoute);
 
 app.listen(port, () => {
   console.log("Server is running on port", port);
