@@ -25,7 +25,7 @@ const upload = multer({ storage });
 
 const router = express.Router();
 
-router.get("/", upload.single('image'), async (req, res) => {
+router.post("/", upload.single('image'), async (req, res) => {
 
     try {
         const { name, category, brand, description, yearAdded, rating, originalPrice, discountPercentage } = req.body;
