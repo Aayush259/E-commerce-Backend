@@ -25,8 +25,18 @@ const router = express.Router();
 
 router.post("/", upload.single('image'), async (req, res) => {
 
+    const { name, category, brand, description, yearAdded, rating, originalPrice, discountPercentage } = req.body;
+
+    rating = Number(rating);
+    originalPrice = Number(originalPrice);
+    discountPercentage = Number(discountPercentage);
+    yearAdded = Number(yearAdded);
+
+    if (isNaN(rating) || isNaN(originalPrice) || isNaN(discountPercentage) || isNaN(yearAdded)) {
+        return res.status(400).json({ message: "Invalid input" });
+    }
+
     try {
-        const { name, category, brand, description, yearAdded, rating, originalPrice, discountPercentage } = req.body;
 
         if (!req.file) {
             return res.status(400).json({ message: "No image provided" });
