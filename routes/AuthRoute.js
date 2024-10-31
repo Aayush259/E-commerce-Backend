@@ -71,7 +71,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/refresh", async (req, res) => {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.status(403).json({ message: "Refresh token required" });
 
     try {
@@ -106,6 +106,12 @@ router.post("/logout", async (req, res) => {
         const user = await User.findById(req.user.id);
         user.refreshToken = null;
         await user.save();
+
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+        });
     } catch (error) {
         res.status(500).json({ message: "Error logging out" });
     }
