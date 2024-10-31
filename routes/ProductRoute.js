@@ -15,9 +15,9 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.post("/delete", async (req, res) => {
+router.delete("/delete", async (req, res) => {
     try {
-        const id = req.body.id;
+        const id = req.query.id;
         const product = await Product.findByIdAndDelete(id);
         res.json({ message: "Deleted Successfully", product });
     } catch (error) {
