@@ -15,4 +15,14 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.post("/delete", async (req, res) => {
+    try {
+        const id = req.body.id;
+        const product = await Product.findByIdAndDelete(id);
+        res.json({ message: "Deleted Successfully", product });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 export default router;
