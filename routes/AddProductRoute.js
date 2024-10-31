@@ -25,7 +25,7 @@ const router = express.Router();
 
 router.post("/", upload.single('image'), async (req, res) => {
 
-    const { name, category, brand, description, yearAdded, rating, originalPrice, discountPercentage } = req.body;
+    let { name, category, brand, description, yearAdded, rating, originalPrice, discountPercentage } = req.body;
 
     rating = Number(rating);
     originalPrice = Number(originalPrice);
