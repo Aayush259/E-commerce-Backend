@@ -61,7 +61,6 @@ router.post("/login", async (req, res) => {
         if (user && await bycrypt.compare(req.body.password, user.password)) {
             const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
             const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-            user.refreshToken = refreshToken;
 
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
@@ -71,6 +70,8 @@ router.post("/login", async (req, res) => {
             })
 
             res.json({ message: "Logged in successfully", accessToken, user });
+            user.refreshToken = refreshToken;
+            await user.save();
         } else {
             res.status(401).json({ message: "Invalid credentials" });
         }
