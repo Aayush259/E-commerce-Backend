@@ -70,7 +70,7 @@ router.post("/login", async (req, res) => {
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             })
 
-            res.json({ message: "Logged in successfully", accessToken });
+            res.json({ message: "Logged in successfully", accessToken, user });
         } else {
             res.status(401).json({ message: "Invalid credentials" });
         }
