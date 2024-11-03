@@ -22,7 +22,7 @@ const authMiddleware = (req, res, next) => {
 router.get("/user", authMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        res.json({ email: user.email });
+        res.json({ email: user.email, name: user.name, _id: user._id });
     } catch (error) {
         res.status(500).json({ message: "Error fetching user" });
     }
