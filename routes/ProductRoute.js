@@ -1,11 +1,23 @@
 import express from "express";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 import Product from "../models/Product.js";
 import User from "../models/User.js";
 
 dotenv.config();
 
 const router = express.Router();
+
+const authMiddleware = (req, res, next) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(403).json({ message: "Token missing" });
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) return res.status(401).json({ message: "Invalid token" });
+        req.user = decoded;
+        next();
+    })
+};
 
 router.get("/", async (req, res) => {
     try {
@@ -26,9 +38,10 @@ router.delete("/delete", async (req, res) => {
     }
 });
 
-router.post("/addToCart", async (req, res) => {
+router.post("/addToCart", authMiddleware, async (req, res) => {
     try {
-        const { productId, userId } = req.body;
+        const { productId } = req.body;
+        const userId = req.user.id;
         const user = await User.findById(userId);
         const product = await Product.findById(productId);
 
@@ -49,9 +62,10 @@ router.post("/addToCart", async (req, res) => {
     }
 });
 
-router.post("/removeFromCart", async (req, res) => {
+router.post("/removeFromCart", authMiddleware, async (req, res) => {
     try {
-        const { productId, userId } = req.body;
+        const { productId } = req.body;
+        const userId = req.user.id;
         const user = await User.findById(userId);
         const product = await Product.findById(productId);
 
@@ -74,9 +88,9 @@ router.post("/removeFromCart", async (req, res) => {
     }
 });
 
-router.get("/getCart", async (req, res) => {
+router.get("/getCart", authMiddleware, async (req, res) => {
     try {
-        const { userId } = req.body;
+        const userId = req.user.id;
         const user = await User.findById(userId);
 
         if (!user) {
@@ -91,9 +105,10 @@ router.get("/getCart", async (req, res) => {
     }
 });
 
-router.post("/addToWishlist", async (req, res) => {
+router.post("/addToWishlist", authMiddleware, async (req, res) => {
     try {
-        const { productId, userId } = req.body;
+        const { productId } = req.body;
+        const userId = req.user.id;
         const user = await User.findById(userId);
         const product = await Product.findById(productId);
 
@@ -114,9 +129,10 @@ router.post("/addToWishlist", async (req, res) => {
     }
 });
 
-router.post("/removeFromWishlist", async (req, res) => {
+router.post("/removeFromWishlist", authMiddleware, async (req, res) => {
     try {
-        const { productId, userId } = req.body;
+        const { productId } = req.body;
+        const userId = req.user.id;
         const user = await User.findById(userId);
         const product = await Product.findById(productId);
 
@@ -139,9 +155,9 @@ router.post("/removeFromWishlist", async (req, res) => {
     }
 });
 
-router.get("/getWishlist", async (req, res) => {
+router.get("/getWishlist", authMiddleware, async (req, res) => {
     try {
-        const { userId } = req.body;
+        const userId = req.user.id;
         const user = await User.findById(userId);
 
         if (!user) {
