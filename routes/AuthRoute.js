@@ -22,7 +22,7 @@ const authMiddleware = (req, res, next) => {
 router.get("/user", authMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        res.json({ email: user.email, name: user.name, _id: user._id });
+        res.json({ email: user.email, name: user.name, _id: user._id, cart: user.cart, wishlist: user.wishlist });
     } catch (error) {
         res.status(500).json({ message: "Error fetching user" });
     }
@@ -59,12 +59,13 @@ router.post("/login", async (req, res) => {
         const user = await User.findOne({ email: req.body.email });
 
         if (user && await bycrypt.compare(req.body.password, user.password)) {
-            const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+            const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1m" });
             const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                // secure: process.env.NODE_ENV === "production",
+                secure: false,
                 sameSite: "strict",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             })
@@ -123,7 +124,7 @@ router.post("/logout", async (req, res) => {
             sameSite: "strict",
         });
     } catch (error) {
-        res.status(500).json({ message: "Error logging out" });
+        res.status(500).json({ message: "Error logging out", error });
     }
 });
 
