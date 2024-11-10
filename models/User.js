@@ -7,6 +7,11 @@ const userSchema = new mongoose.Schema({
     refreshToken: { type: String },
     cart: { type: Array, default: [] },
     wishlist: { type: Array, default: [] },
+    address: { type: String, default: null },
+    phone: { type: String, default: null },
+    pincode: { type: String, default: null },
+    city: { type: String, default: null },
+    state: { type: String, default: null },
 });
 
 const User = mongoose.model("User", userSchema);
