@@ -73,7 +73,7 @@ router.post("/login", async (req, res) => {
         // If the email does not exist, return a 401 Unauthorized response.
         if (user && await bycrypt.compare(req.body.password, user.password)) {
             // Generate an access token and a refresh token.
-            const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1m" });
+            const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "4h" });
             const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
             // Set the refresh token as an HTTP-only cookie.
@@ -112,7 +112,7 @@ router.post("/refresh", async (req, res) => {
 
         // If the user exists and the refresh token matches, generate new access and refresh tokens.
         if (user && user.refreshToken === refreshToken) {
-            const newAccessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+            const newAccessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "4h" });
             const newRefreshToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
             user.refreshToken = newRefreshToken;
