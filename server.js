@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-    origin: "*",
+    origin: "https://aayush259.github.io",
     credentials: true,    // Allows cookies to be sent
 }));
 
