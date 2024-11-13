@@ -80,7 +80,7 @@ router.post("/login", async (req, res) => {
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: "strict",
+                sameSite: "none",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             })
 
@@ -121,7 +121,7 @@ router.post("/refresh", async (req, res) => {
             res.cookie("refreshToken", newRefreshToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: "strict",
+                sameSite: "none",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             })
 
@@ -144,7 +144,7 @@ router.post("/logout", async (req, res) => {
         res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
         });
     } catch (error) {
         res.status(500).json({ message: "Error logging out", error });
